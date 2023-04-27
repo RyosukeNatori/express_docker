@@ -1,0 +1,34 @@
+version: "3.7"
+services:
+   todo_app:
+     build:
+       context: .
+       dockerfile: Dockerfile
+     ports:
+       - "30000:3000"
+     volumes:
+       - '.:/app'
+       - '/app/node_modules'
+     environment:
+       NODE_ENV: development
+     tty:
+       true
+     depends_on:
+       - db
+   db:
+     image: mysql:8.0
+     container_name: mysql_host
+     environment:
+       # ユーザーアカウントとDBを設定
+       MYSQL_DATABASE: '${DB_DATABASE}'
+       MYSQL_USER: '${DB_USER}'
+       MYSQL_PASSWORD: '${DB_PASSWORD}'
+       MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+       TZ: '${TZ}'
+#     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+     volumes:
+       - './tmp/mysql:/var/lib/mysql'
+     ports:
+       - '33060:3306'
+     tty:
+       true
